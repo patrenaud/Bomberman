@@ -29,8 +29,8 @@ public class LevelGenerator : MonoBehaviour
         float y = (Screen.height - TILE_SIZE) / PIXEL_PER_UNIT / 2.0f;
         Vector2 initialPos = new Vector2(x, y);
 
-        int width = (int)(Screen.width / TILE_SIZE);
-        int height = (int)(Screen.height / TILE_SIZE);
+        //int width = (int)(Screen.width / TILE_SIZE);
+       // int height = (int)(Screen.height / TILE_SIZE);
 
         Vector2 offset = new Vector2(TILE_SIZE / PIXEL_PER_UNIT, -TILE_SIZE / PIXEL_PER_UNIT);
         Vector2 spawnPos = initialPos + offset;

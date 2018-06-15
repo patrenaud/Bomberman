@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\DontDestroyOnLoad.cs" />
      <Compile Include="Assets\Scripts\EClass.cs" />
      <Compile Include="Assets\Scripts\ETileType.cs" />
      <Compile Include="Assets\Scripts\LevelData.cs" />
@@ -58,6 +59,7 @@
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerData.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+     <Compile Include="Assets\Scripts\SceneManagement.cs" />
  <Reference Include="Vuforia.UnityExtensions">
  <HintPath>C:/Program Files/Unity2017.4/Editor/Data/PlaybackEngines/VuforiaSupport/Managed/Runtime/Vuforia.UnityExtensions.dll</HintPath>
  </Reference>

@@ -113,71 +113,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &459005895
+--- !u!1 &1463081969
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 459005897}
-  - component: {fileID: 459005896}
-  m_Layer: 0
-  m_Name: LevelGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &459005896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 459005895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11490658a85d0894487094e594fa146a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FloorPrefabList:
-  - {fileID: 1863513587638628, guid: 07ed2b1e693d7ea41ac1a7d597bd20f8, type: 2}
-  - {fileID: 1237655262331228, guid: bbe09600b9c30ef4791d83146ee4bd0f, type: 2}
-  m_WallPrefabList:
-  - {fileID: 1339371325220900, guid: ee687289d251c174f97fb777882c3532, type: 2}
-  - {fileID: 1781932820378972, guid: 59eba499f3403b34eb811af26be3044c, type: 2}
-  - {fileID: 1761295378919808, guid: 923f3c7de518e7e4898d4255ff5d102f, type: 2}
-  m_DestructiblePrefabList:
-  - {fileID: 1504962825008440, guid: 7c00f8571f5fe004c9dd150a44cf4b5e, type: 2}
-  - {fileID: 1951917527722672, guid: 358bb1d3f94368e4aa49420c48ab4b09, type: 2}
-  - {fileID: 1160025125422204, guid: 227e3b8e69445cb46b25c5b1103ca67d, type: 2}
-  m_LevelData: {fileID: 11400000, guid: 08f71569b5a63604cb5374835e858a5e, type: 2}
-  m_PlayerPrefab: {fileID: 114235759585249556, guid: 1c1c7f6d2005e1542a9d025d364cc962,
-    type: 2}
---- !u!4 &459005897
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 459005895}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1759107389
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1759107393}
-  - component: {fileID: 1759107392}
-  - component: {fileID: 1759107391}
-  - component: {fileID: 1759107390}
+  - component: {fileID: 1463081973}
+  - component: {fileID: 1463081972}
+  - component: {fileID: 1463081971}
+  - component: {fileID: 1463081970}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -185,26 +131,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1759107390
+--- !u!81 &1463081970
 AudioListener:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1759107389}
+  m_GameObject: {fileID: 1463081969}
   m_Enabled: 1
---- !u!124 &1759107391
+--- !u!124 &1463081971
 Behaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1759107389}
+  m_GameObject: {fileID: 1463081969}
   m_Enabled: 1
---- !u!20 &1759107392
+--- !u!20 &1463081972
 Camera:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1759107389}
+  m_GameObject: {fileID: 1463081969}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -219,7 +165,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.2
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -235,12 +181,12 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1759107393
+--- !u!4 &1463081973
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1759107389}
+  m_GameObject: {fileID: 1463081969}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}

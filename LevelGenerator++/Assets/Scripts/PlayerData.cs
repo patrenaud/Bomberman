@@ -8,6 +8,8 @@ public class PlayerData : ScriptableObject
     [SerializeField] private float m_HP;
     [SerializeField] private float m_Speed;
     [SerializeField] private string m_Id;
+    //[SerializeField] private Animator m_Animator;
+
 
     public float HP { get { return m_HP; } }
     public float Speed { get { return m_Speed; } }
