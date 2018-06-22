@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     public PlayerData m_Data;
 
-    private float m_CurrentHp;
+    public float m_CurrentHp;
     private float m_CurrentSpeed;
 
 	// Use this for initialization

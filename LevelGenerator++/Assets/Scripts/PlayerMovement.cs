@@ -5,9 +5,12 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float m_Speed;
-    
+    public float m_CurrentHp = 10;
+
+    private Player m_Player;
     private int m_CurrentRow;
     private int m_CurrentCol;
+    private List<GameObject> m_Bombs = new List<GameObject>();
     private bool m_IsMoving = false;
     private Vector2 m_InitialPos;
     private Vector2 m_WantedPos;
@@ -15,10 +18,19 @@ public class PlayerMovement : MonoBehaviour
     private float m_InputX;
     private float m_InputY;
     [SerializeField] private Animator m_Animator;
-    [SerializeField] private GameObject m_Bomb;
+    [SerializeField] private GameObject m_BombPrefab;
+
+    public int CurrentRow
+    {
+        get { return m_CurrentRow; }
+    }
+    public int CurrentCol
+    {
+        get { return m_CurrentCol; }
+    }
 
     private void Start()
-    {      
+    {
         m_Animator = GetComponent<Animator>();
     }
 
@@ -66,16 +78,10 @@ public class PlayerMovement : MonoBehaviour
         m_Animator.SetInteger("MoveVertical", (int)m_InputY);
 
         if (Input.GetKeyDown(KeyCode.Space))
-        {            
-            StartCoroutine(BombSetup());            
+        {
+            m_Bombs.Add(m_BombPrefab);
+            GameObject Instance = Instantiate(m_BombPrefab, transform.position, Quaternion.identity);
         }
-    }
-
-    private IEnumerator BombSetup()
-    {        
-        Instantiate(m_Bomb, transform.position, Quaternion.identity);
-        yield return new WaitForSeconds(4f);
-
     }
 
     private void FixedUpdate()
@@ -91,6 +97,15 @@ public class PlayerMovement : MonoBehaviour
             {
                 m_IsMoving = false;
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D aOther)
+    {
+        if (aOther.gameObject.layer == LayerMask.GetMask("BombBlast"))
+        {
+            Debug.Log("Hit");
+            m_CurrentHp -= 1;
         }
     }
 }

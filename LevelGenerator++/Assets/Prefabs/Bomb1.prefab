@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4944109605106826}
   - component: {fileID: 212058208789119234}
   - component: {fileID: 95570178857719700}
+  - component: {fileID: 114754321892298238}
   m_Layer: 0
   m_Name: Bomb1
   m_TagString: Untagged
@@ -58,6 +59,19 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114754321892298238
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1936868030479126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7a366c5b27f5eb4ea423a5b89d01e23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Blast: {fileID: 1443832804738726, guid: cc63a397366739042a8e5c0d6beb39a8, type: 2}
+  m_BombRadius: 1
 --- !u!212 &212058208789119234
 SpriteRenderer:
   m_ObjectHideFlags: 1

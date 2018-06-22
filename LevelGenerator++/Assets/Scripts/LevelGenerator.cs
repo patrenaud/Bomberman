@@ -64,7 +64,7 @@ public class LevelGenerator : MonoBehaviour
                 wall.transform.position = aPos;
                 break;
             case ETileType.Destructable:
-                GameObject Destructable = Instantiate(m_DestructiblePrefabList[/*Random.Range(0, m_WallPrefabList.Length)*/0]);
+                GameObject Destructable = Instantiate(m_DestructiblePrefabList[Random.Range(0, m_WallPrefabList.Length)]);
                 Destructable.transform.position = aPos;
                 break;
         }
