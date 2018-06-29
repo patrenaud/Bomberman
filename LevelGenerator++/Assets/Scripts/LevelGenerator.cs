@@ -17,6 +17,8 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] m_WallPrefabList;
     public GameObject[] m_DestructiblePrefabList;
 
+    private List<List<GameObject>> m_TileObjects = new List<List<GameObject>>();
+
     public LevelData m_LevelData;
 
     public PlayerMovement m_PlayerPrefab;
@@ -29,9 +31,6 @@ public class LevelGenerator : MonoBehaviour
         float y = (Screen.height - TILE_SIZE) / PIXEL_PER_UNIT / 2.0f;
         Vector2 initialPos = new Vector2(x, y);
 
-        //int width = (int)(Screen.width / TILE_SIZE);
-       // int height = (int)(Screen.height / TILE_SIZE);
-
         Vector2 offset = new Vector2(TILE_SIZE / PIXEL_PER_UNIT, -TILE_SIZE / PIXEL_PER_UNIT);
         Vector2 spawnPos = initialPos + offset;
 
@@ -40,17 +39,23 @@ public class LevelGenerator : MonoBehaviour
 
         for (int i = 0; i < m_LevelData.GetWidth(); ++i)
         {
+            m_TileObjects.Add(new List<GameObject>());
             for (int j = 0; j < m_LevelData.GetHeight(); ++j)
             {
                 offset = new Vector2(TILE_SIZE * i / PIXEL_PER_UNIT, -TILE_SIZE * j / PIXEL_PER_UNIT);
                 spawnPos = initialPos + offset;
-
-                CreateTile(m_LevelData.Tiles[i][j], spawnPos);
+                
+                m_TileObjects[i].Add(CreateTile(m_LevelData.Tiles[i][j], spawnPos));
             }
+        }
+
+        for (int i = 0; i < m_LevelData.Tiles.Length; i++)
+        {
+            m_LevelData.Tiles[i].SetCopy();
         }
     }
 
-    private void CreateTile(ETileType aType, Vector2 aPos)
+    private GameObject CreateTile(ETileType aType, Vector2 aPos)
     {
         // ON DOIT AJOUTER UN RANDOM POUR CHOISIR UNE IMAGE DANS LA LISTE
         switch (aType)
@@ -58,20 +63,21 @@ public class LevelGenerator : MonoBehaviour
             case ETileType.Floor:
                 GameObject floor = Instantiate(m_FloorPrefabList[Random.Range(0, m_FloorPrefabList.Length)]);
                 floor.transform.position = aPos;
-                break;
+                return floor;
             case ETileType.Wall:
                 GameObject wall = Instantiate(m_WallPrefabList[Random.Range(0, m_WallPrefabList.Length)]);
                 wall.transform.position = aPos;
-                break;
+                return wall;
             case ETileType.Destructable:
                 GameObject Destructable = Instantiate(m_DestructiblePrefabList[Random.Range(0, m_WallPrefabList.Length)]);
                 Destructable.transform.position = aPos;
-                break;
+                return Destructable;
         }
+        return null;
     }
 
     // Ici on voit le type de la tuile
-    public ETileType GetTileTypeAtPos(int aRow, int aCol)
+    public ETileType GetTileTypeAtIndex(int aRow, int aCol)
     {
         if (aRow >= 0 && aRow < m_LevelData.GetWidth())
         {
@@ -83,6 +89,17 @@ public class LevelGenerator : MonoBehaviour
         return ETileType.Wall;
     }
 
+    // Set tile type 
+    public void SetTileTypeAtIndex(int aRow, int aCol)
+    {
+        Vector2 pos;
+        m_LevelData.Tiles[aCol][aRow] = ETileType.Floor;
+        pos = m_TileObjects[aCol][aRow].transform.position;
+        Destroy(m_TileObjects[aCol][aRow].gameObject);
+        m_TileObjects[aCol][aRow] = Instantiate(m_FloorPrefabList[Random.Range(0, m_FloorPrefabList.Length)], pos, Quaternion.identity);
+    }
+
+
     public Vector3 GetPositionAt(int aRow, int aCol)
     {
         float x = (-Screen.width + TILE_SIZE) / PIXEL_PER_UNIT / 2.0f;
@@ -93,5 +110,13 @@ public class LevelGenerator : MonoBehaviour
         Vector2 pos = initialPos + offset;
 
         return pos;
+    }
+
+    private void OnDestroy()
+    {
+        for (int i = 0; i < m_LevelData.Tiles.Length; i++)
+        {
+            m_LevelData.Tiles[i].ResetCopy();
+        }
     }
 }

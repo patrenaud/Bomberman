@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class BombBehavior : MonoBehaviour
 {
-    private float m_offset = 64f / 100f; // = Pixel size / Pixel per Unit
-
-    [SerializeField]
     public GameObject m_Blast;
     public int m_BombRadius = 1;
-    private LevelGenerator m_Level;
+
+    private int m_Row;
+    private int m_Col;
+    private Vector2 BombPos;
+
 
     private void Start()
     {
         StartCoroutine(BombSetup());
+    }
+
+    public void Setup(int a_CurrentCol, int a_CurrentRow)
+    {
+        m_Row = a_CurrentRow;
+        m_Col = a_CurrentCol;
+        BombPos = new Vector2(m_Row, m_Col);
     }
 
     private IEnumerator BombSetup()
@@ -26,31 +34,48 @@ public class BombBehavior : MonoBehaviour
 
     private IEnumerator BombRadius()
     {
-        Vector2 BombPos = new Vector2(transform.position.x, transform.position.y);
-
+        Debug.Log("BombPosition: " + BombPos);
         List<Vector2> AllBombsPos = new List<Vector2>();
+        List<Vector2> AllBlastIndex = new List<Vector2>();
 
         for (int i = 0; i <= m_BombRadius; i++)
         {
             if (i != 0)
             {
-                // Instanciate bomb in horizontal radius
-                AllBombsPos.Add(new Vector2(BombPos.x + (i * m_offset), BombPos.y));
-                AllBombsPos.Add(new Vector2(BombPos.x - (i * m_offset), BombPos.y));
+                // Instanciate blast in horizontal radius
+                AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y, (int)BombPos.x + i));
+                AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y, (int)BombPos.x - i));
+
+                AllBlastIndex.Add(new Vector2(m_Row, m_Col + i));
+                AllBlastIndex.Add(new Vector2(m_Row, m_Col - i));
+
+
                 for (int j = 0; j <= m_BombRadius; j++)
                 {
-                    // Instanciate bomb in vertival radius
-                    AllBombsPos.Add(new Vector2(BombPos.x, BombPos.y + (i * m_offset)));
-                    AllBombsPos.Add(new Vector2(BombPos.x, BombPos.y - (i * m_offset)));
+                    if (j != 0)
+                    {
+                        // Instanciate blast in vertival radius
+                        AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y + j, (int)BombPos.x));
+                        AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y - j, (int)BombPos.x));
+
+                        AllBlastIndex.Add(new Vector2(m_Row + j, m_Col));
+                        AllBlastIndex.Add(new Vector2(m_Row - j, m_Col));
+                    }
                 }
             }
         }
 
-        for (int i = 0; i < AllBombsPos.Count; i++)
+        for (int i = 0; i < AllBlastIndex.Count; i++)
         {
-            //if(m_Level.GetTileTypeAtPos(AllBombsPos[i].x, AllBombsPos[i].y) == "Wall )
+            Instantiate(m_Blast, AllBombsPos[i], Quaternion.identity);
 
-            GameObject Instance = Instantiate(m_Blast, AllBombsPos[i], Quaternion.identity);
+            // En utilisant le debug, j'ai du inverser le signe du x puisqu'il était négetif
+            Debug.Log("Blast Position: " + AllBombsPos[i]);
+            if (LevelGenerator.Instance.GetTileTypeAtIndex((int)AllBlastIndex[i].y, (int)AllBlastIndex[i].x) == ETileType.Destructable)
+            {
+                Debug.Log("SetTileType");
+                LevelGenerator.Instance.SetTileTypeAtIndex((int)AllBlastIndex[i].y, (int)AllBlastIndex[i].x);
+            }
         }
         yield return new WaitForSeconds(1f);
     }

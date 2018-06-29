@@ -20,15 +20,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator m_Animator;
     [SerializeField] private GameObject m_BombPrefab;
 
-    public int CurrentRow
-    {
-        get { return m_CurrentRow; }
-    }
-    public int CurrentCol
-    {
-        get { return m_CurrentCol; }
-    }
-
     private void Start()
     {
         m_Animator = GetComponent<Animator>();
@@ -49,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
             float askMoveVertical = Input.GetAxisRaw("Vertical");
 
             if (askMoveHorizontal != 0 &&
-                LevelGenerator.Instance.GetTileTypeAtPos(m_CurrentRow, m_CurrentCol + (int)askMoveHorizontal) == ETileType.Floor)
+                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow, m_CurrentCol + (int)askMoveHorizontal) == ETileType.Floor)
             {
                 m_IsMoving = true;
                 m_PercentageCompletion = 0f;
@@ -60,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
                 m_CurrentCol += (int)askMoveHorizontal;
             }
             else if (askMoveVertical != 0 &&
-                LevelGenerator.Instance.GetTileTypeAtPos(m_CurrentRow - (int)askMoveVertical, m_CurrentCol) == ETileType.Floor)
+                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow - (int)askMoveVertical, m_CurrentCol) == ETileType.Floor)
             {
                 m_IsMoving = true;
                 m_PercentageCompletion = 0f;
@@ -68,6 +59,11 @@ public class PlayerMovement : MonoBehaviour
                 m_InitialPos = transform.position;
                 m_WantedPos = LevelGenerator.Instance.GetPositionAt(m_CurrentRow - (int)askMoveVertical, m_CurrentCol);
                 m_CurrentRow -= (int)askMoveVertical;
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Debug.Log(m_CurrentCol);
+                Debug.Log(m_CurrentRow);
             }
         }
 
@@ -80,7 +76,8 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             m_Bombs.Add(m_BombPrefab);
-            GameObject Instance = Instantiate(m_BombPrefab, transform.position, Quaternion.identity);
+            GameObject instance = Instantiate(m_BombPrefab, transform.position, Quaternion.identity);
+            instance.GetComponent<BombBehavior>().Setup(m_CurrentRow, m_CurrentCol);
         }
     }
 
@@ -103,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D aOther)
     {
         if (aOther.gameObject.layer == LayerMask.GetMask("BombBlast"))
+        // Does NOT work
         {
             Debug.Log("Hit");
             m_CurrentHp -= 1;
