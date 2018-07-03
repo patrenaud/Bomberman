@@ -12,16 +12,18 @@ public class LevelGenerator : MonoBehaviour
 
     private const float PIXEL_PER_UNIT = 100;
     private const float TILE_SIZE = 64;
+    private List<List<GameObject>> m_TileObjects = new List<List<GameObject>>();    
 
     public GameObject[] m_FloorPrefabList;
     public GameObject[] m_WallPrefabList;
     public GameObject[] m_DestructiblePrefabList;
 
-    private List<List<GameObject>> m_TileObjects = new List<List<GameObject>>();
-
     public LevelData m_LevelData;
 
     public PlayerMovement m_PlayerPrefab;
+    public EnemyMovement m_EnemyPrefab;
+
+    public BombPowerUp1 m_Powerup1;
 
     private void Awake()
     {
@@ -33,9 +35,15 @@ public class LevelGenerator : MonoBehaviour
 
         Vector2 offset = new Vector2(TILE_SIZE / PIXEL_PER_UNIT, -TILE_SIZE / PIXEL_PER_UNIT);
         Vector2 spawnPos = initialPos + offset;
+        Vector2 EnemySpawnPos = initialPos + offset + new Vector2(8, 8);
+        Vector2 Power1Pos = initialPos + offset + new Vector2(2, 2);
 
         PlayerMovement player = Instantiate(m_PlayerPrefab, spawnPos, Quaternion.identity);
         player.Setup(1, 1);
+        EnemyMovement enemy = Instantiate(m_EnemyPrefab, EnemySpawnPos, Quaternion.identity);
+        enemy.Setup(9, 9);
+        BombPowerUp1 Powerup1 = Instantiate(m_Powerup1, Power1Pos, Quaternion.identity);
+
 
         for (int i = 0; i < m_LevelData.GetWidth(); ++i)
         {

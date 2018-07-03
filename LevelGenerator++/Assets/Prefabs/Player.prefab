@@ -117,11 +117,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fed39f505de448b4b8409a5b5e9149e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Speed: 2
-  m_CurrentHp: 10
+  m_CurrentRow: 0
+  m_CurrentCol: 0
+  m_CurrentHp: -3928
   m_Animator: {fileID: 95509727289809034}
   m_BombPrefab: {fileID: 1936868030479126, guid: 2817f532283a97c40b3eccb2447b0c12,
     type: 2}
+  m_Data: {fileID: 11400000, guid: 15e4380367eba654d9bfb6b40f13e810, type: 2}
 --- !u!212 &212530452264431000
 SpriteRenderer:
   m_ObjectHideFlags: 1

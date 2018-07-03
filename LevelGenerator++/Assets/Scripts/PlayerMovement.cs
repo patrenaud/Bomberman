@@ -4,25 +4,28 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float m_Speed;
-    public float m_CurrentHp = 10;
+    public int m_CurrentRow;
+    public int m_CurrentCol;
+    public float m_CurrentHp;
 
-    private Player m_Player;
-    private int m_CurrentRow;
-    private int m_CurrentCol;
     private List<GameObject> m_Bombs = new List<GameObject>();
     private bool m_IsMoving = false;
+    private bool m_CanPlaceBomb = true;
     private Vector2 m_InitialPos;
     private Vector2 m_WantedPos;
-    private float m_PercentageCompletion;
+    private float m_PercentageCompletion;    
+    private float m_CurrentSpeed = 2f;
     private float m_InputX;
     private float m_InputY;
     [SerializeField] private Animator m_Animator;
     [SerializeField] private GameObject m_BombPrefab;
+    [SerializeField] private PlayerData m_Data;
 
     private void Start()
     {
         m_Animator = GetComponent<Animator>();
+        m_CurrentHp = m_Data.HP;
+        m_CurrentSpeed = m_Data.Speed;
     }
 
     public void Setup(int aRow, int aCol)
@@ -73,19 +76,27 @@ public class PlayerMovement : MonoBehaviour
         m_Animator.SetInteger("MoveHorizontal", (int)m_InputX);
         m_Animator.SetInteger("MoveVertical", (int)m_InputY);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && m_CanPlaceBomb)
         {
+            m_CanPlaceBomb = false;
+            StartCoroutine(BombDelay());
             m_Bombs.Add(m_BombPrefab);
             GameObject instance = Instantiate(m_BombPrefab, transform.position, Quaternion.identity);
             instance.GetComponent<BombBehavior>().Setup(m_CurrentRow, m_CurrentCol);
         }
     }
 
+    private IEnumerator BombDelay()
+    {
+        yield return new WaitForSeconds(3.8f);
+        m_CanPlaceBomb = true;
+    }
+
     private void FixedUpdate()
     {
         if (m_IsMoving)
         {
-            m_PercentageCompletion += Time.fixedDeltaTime * m_Speed;
+            m_PercentageCompletion += Time.fixedDeltaTime * m_CurrentSpeed;
             m_PercentageCompletion = Mathf.Clamp(m_PercentageCompletion, 0f, 1f);
 
             transform.position = Vector3.Lerp(m_InitialPos, m_WantedPos, m_PercentageCompletion);
@@ -94,16 +105,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 m_IsMoving = false;
             }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D aOther)
-    {
-        if (aOther.gameObject.layer == LayerMask.GetMask("BombBlast"))
-        // Does NOT work
-        {
-            Debug.Log("Hit");
-            m_CurrentHp -= 1;
         }
     }
 }

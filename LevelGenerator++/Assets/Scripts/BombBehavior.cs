@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class BombBehavior : MonoBehaviour
 {
     public GameObject m_Blast;
@@ -10,9 +11,9 @@ public class BombBehavior : MonoBehaviour
     private int m_Row;
     private int m_Col;
     private Vector2 BombPos;
+    [SerializeField] private GameObject m_PowerBomb;
 
-
-    private void Start()
+    public void Start()
     {
         StartCoroutine(BombSetup());
     }
@@ -27,12 +28,12 @@ public class BombBehavior : MonoBehaviour
     private IEnumerator BombSetup()
     {
         yield return new WaitForSeconds(3.8f);
-        StartCoroutine(BombRadius());
+        StartCoroutine(BombBlast());
         yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 
-    private IEnumerator BombRadius()
+    private IEnumerator BombBlast()
     {
         Debug.Log("BombPosition: " + BombPos);
         List<Vector2> AllBombsPos = new List<Vector2>();
@@ -42,22 +43,22 @@ public class BombBehavior : MonoBehaviour
         {
             if (i != 0)
             {
-                // Instanciate blast in horizontal radius
+                // Rempli la liste de position des blasts
                 AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y, (int)BombPos.x + i));
                 AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y, (int)BombPos.x - i));
 
+                // Rempli la liste d'index des blasts
                 AllBlastIndex.Add(new Vector2(m_Row, m_Col + i));
                 AllBlastIndex.Add(new Vector2(m_Row, m_Col - i));
-
 
                 for (int j = 0; j <= m_BombRadius; j++)
                 {
                     if (j != 0)
                     {
-                        // Instanciate blast in vertival radius
+                        // Rempli la liste de position des blasts
                         AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y + j, (int)BombPos.x));
                         AllBombsPos.Add(LevelGenerator.Instance.GetPositionAt((int)BombPos.y - j, (int)BombPos.x));
-
+                        // Rempli la liste d'index des blasts
                         AllBlastIndex.Add(new Vector2(m_Row + j, m_Col));
                         AllBlastIndex.Add(new Vector2(m_Row - j, m_Col));
                     }
@@ -67,13 +68,11 @@ public class BombBehavior : MonoBehaviour
 
         for (int i = 0; i < AllBlastIndex.Count; i++)
         {
+            // On crée les Blasts de bombes aux index de la liste
             Instantiate(m_Blast, AllBombsPos[i], Quaternion.identity);
 
-            // En utilisant le debug, j'ai du inverser le signe du x puisqu'il était négetif
-            Debug.Log("Blast Position: " + AllBombsPos[i]);
             if (LevelGenerator.Instance.GetTileTypeAtIndex((int)AllBlastIndex[i].y, (int)AllBlastIndex[i].x) == ETileType.Destructable)
             {
-                Debug.Log("SetTileType");
                 LevelGenerator.Instance.SetTileTypeAtIndex((int)AllBlastIndex[i].y, (int)AllBlastIndex[i].x);
             }
         }
