@@ -12,18 +12,17 @@ public class LevelGenerator : MonoBehaviour
 
     private const float PIXEL_PER_UNIT = 100;
     private const float TILE_SIZE = 64;
-    private List<List<GameObject>> m_TileObjects = new List<List<GameObject>>();    
+    private List<List<GameObject>> m_TileObjects = new List<List<GameObject>>();
 
     public GameObject[] m_FloorPrefabList;
     public GameObject[] m_WallPrefabList;
     public GameObject[] m_DestructiblePrefabList;
-
+    public GameObject m_TrapPrefab;
     public LevelData m_LevelData;
-
     public PlayerMovement m_PlayerPrefab;
     public EnemyMovement m_EnemyPrefab;
-
-    public BombPowerUp1 m_Powerup1;
+    public BombPowerUp1 m_BombPowerup1;
+    public SpeedPowerUp m_SpeedPowerUp;
 
     private void Awake()
     {
@@ -33,26 +32,32 @@ public class LevelGenerator : MonoBehaviour
         float y = (Screen.height - TILE_SIZE) / PIXEL_PER_UNIT / 2.0f;
         Vector2 initialPos = new Vector2(x, y);
 
+        // These are for positions in scene at Awake
         Vector2 offset = new Vector2(TILE_SIZE / PIXEL_PER_UNIT, -TILE_SIZE / PIXEL_PER_UNIT);
         Vector2 spawnPos = initialPos + offset;
-        Vector2 EnemySpawnPos = initialPos + offset + new Vector2(8, 8);
-        Vector2 Power1Pos = initialPos + offset + new Vector2(2, 2);
+        Vector2 EnemySpawnPos = initialPos + offset * 9;
+        Vector2 Power1Pos = initialPos + offset * 3;
+        Vector2 SpeedPowerPos = initialPos + offset * 5;
 
+        // Instantiating objects in GamePlay Scene
         PlayerMovement player = Instantiate(m_PlayerPrefab, spawnPos, Quaternion.identity);
         player.Setup(1, 1);
         EnemyMovement enemy = Instantiate(m_EnemyPrefab, EnemySpawnPos, Quaternion.identity);
         enemy.Setup(9, 9);
-        BombPowerUp1 Powerup1 = Instantiate(m_Powerup1, Power1Pos, Quaternion.identity);
-
+        BombPowerUp1 bombPowerup1 = Instantiate(m_BombPowerup1, Power1Pos, Quaternion.identity);
+        bombPowerup1.Setup(3,3);
+        SpeedPowerUp speedPowerUp = Instantiate(m_SpeedPowerUp, SpeedPowerPos, Quaternion.identity);
+        speedPowerUp.Setup(5, 5);
 
         for (int i = 0; i < m_LevelData.GetWidth(); ++i)
         {
             m_TileObjects.Add(new List<GameObject>());
+
             for (int j = 0; j < m_LevelData.GetHeight(); ++j)
             {
                 offset = new Vector2(TILE_SIZE * i / PIXEL_PER_UNIT, -TILE_SIZE * j / PIXEL_PER_UNIT);
                 spawnPos = initialPos + offset;
-                
+
                 m_TileObjects[i].Add(CreateTile(m_LevelData.Tiles[i][j], spawnPos));
             }
         }
@@ -65,7 +70,6 @@ public class LevelGenerator : MonoBehaviour
 
     private GameObject CreateTile(ETileType aType, Vector2 aPos)
     {
-        // ON DOIT AJOUTER UN RANDOM POUR CHOISIR UNE IMAGE DANS LA LISTE
         switch (aType)
         {
             case ETileType.Floor:
@@ -80,6 +84,10 @@ public class LevelGenerator : MonoBehaviour
                 GameObject Destructable = Instantiate(m_DestructiblePrefabList[Random.Range(0, m_WallPrefabList.Length)]);
                 Destructable.transform.position = aPos;
                 return Destructable;
+            case ETileType.Trap:
+                GameObject Trap = Instantiate(m_TrapPrefab);
+                Trap.transform.position = aPos;
+                return Trap;
         }
         return null;
     }

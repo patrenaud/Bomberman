@@ -6,6 +6,7 @@ public class AutoDestroy : MonoBehaviour
 {
     private int m_Row;
     private int m_Col;
+    private bool m_Damage = true;
 
     private void Start()
     {
@@ -17,19 +18,27 @@ public class AutoDestroy : MonoBehaviour
         m_Col = a_CurrentCol;
     }
 
-
     private void Update()
     {
-        if (m_Row == LevelGenerator.Instance.m_PlayerPrefab.m_CurrentRow && m_Col == LevelGenerator.Instance.m_PlayerPrefab.m_CurrentCol)
-        {            
-            LevelGenerator.Instance.m_PlayerPrefab.m_CurrentHp -= 1;
+        if (m_Row == LevelGenerator.Instance.m_PlayerPrefab.m_CurrentRow && m_Col == LevelGenerator.Instance.m_PlayerPrefab.m_CurrentCol && m_Damage)
+        {
+            m_Damage = false;
+            LevelGenerator.Instance.m_PlayerPrefab.DamagePlayer();
+            Destroy(gameObject);
+            m_Damage = true;
+        }
+
+        if (m_Row == LevelGenerator.Instance.m_EnemyPrefab.m_CurrentRow && m_Col == LevelGenerator.Instance.m_EnemyPrefab.m_CurrentCol && m_Damage)
+        {
+            Destroy(gameObject);
+            Destroy(LevelGenerator.Instance.m_EnemyPrefab.gameObject);
+            SceneManagement.Instance.ChangeLevel("Results");
         }
     }
 
     private IEnumerator AutoDestroyer()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         Destroy(gameObject);
     }
-
 }

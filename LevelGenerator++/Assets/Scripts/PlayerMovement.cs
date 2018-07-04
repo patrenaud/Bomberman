@@ -1,35 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
     public int m_CurrentRow;
     public int m_CurrentCol;
+    public int m_BombRadius;
+    public float m_CurrentSpeed;
     public float m_CurrentHp;
 
+    [SerializeField] private Animator m_Animator;
+    [SerializeField] private GameObject m_BombPrefab;
+    [SerializeField] private PlayerData m_Data;
     private List<GameObject> m_Bombs = new List<GameObject>();
     private bool m_IsMoving = false;
     private bool m_CanPlaceBomb = true;
     private Vector2 m_InitialPos;
     private Vector2 m_WantedPos;
     private float m_PercentageCompletion;    
-    private float m_CurrentSpeed = 2f;
     private float m_InputX;
     private float m_InputY;
-    [SerializeField] private Animator m_Animator;
-    [SerializeField] private GameObject m_BombPrefab;
-    [SerializeField] private PlayerData m_Data;
 
     private void Start()
     {
         m_Animator = GetComponent<Animator>();
         m_CurrentHp = m_Data.HP;
         m_CurrentSpeed = m_Data.Speed;
+        m_BombRadius = m_Data.BombRadius;
     }
 
     public void Setup(int aRow, int aCol)
     {
+        LevelGenerator.Instance.m_PlayerPrefab = this;
         m_CurrentRow = aRow;
         m_CurrentCol = aCol;
     }
@@ -43,7 +47,8 @@ public class PlayerMovement : MonoBehaviour
             float askMoveVertical = Input.GetAxisRaw("Vertical");
 
             if (askMoveHorizontal != 0 &&
-                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow, m_CurrentCol + (int)askMoveHorizontal) == ETileType.Floor)
+                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow, m_CurrentCol + (int)askMoveHorizontal) == ETileType.Floor ||
+                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow, m_CurrentCol + (int)askMoveHorizontal) == ETileType.Trap)
             {
                 m_IsMoving = true;
                 m_PercentageCompletion = 0f;
@@ -54,7 +59,8 @@ public class PlayerMovement : MonoBehaviour
                 m_CurrentCol += (int)askMoveHorizontal;
             }
             else if (askMoveVertical != 0 &&
-                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow - (int)askMoveVertical, m_CurrentCol) == ETileType.Floor)
+                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow - (int)askMoveVertical, m_CurrentCol) == ETileType.Floor ||
+                LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow - (int)askMoveVertical, m_CurrentCol) == ETileType.Trap)
             {
                 m_IsMoving = true;
                 m_PercentageCompletion = 0f;
@@ -62,11 +68,6 @@ public class PlayerMovement : MonoBehaviour
                 m_InitialPos = transform.position;
                 m_WantedPos = LevelGenerator.Instance.GetPositionAt(m_CurrentRow - (int)askMoveVertical, m_CurrentCol);
                 m_CurrentRow -= (int)askMoveVertical;
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Debug.Log(m_CurrentCol);
-                Debug.Log(m_CurrentRow);
             }
         }
 
@@ -76,6 +77,7 @@ public class PlayerMovement : MonoBehaviour
         m_Animator.SetInteger("MoveHorizontal", (int)m_InputX);
         m_Animator.SetInteger("MoveVertical", (int)m_InputY);
 
+        // Pour placer la bombe
         if (Input.GetKeyDown(KeyCode.Space) && m_CanPlaceBomb)
         {
             m_CanPlaceBomb = false;
@@ -83,6 +85,23 @@ public class PlayerMovement : MonoBehaviour
             m_Bombs.Add(m_BombPrefab);
             GameObject instance = Instantiate(m_BombPrefab, transform.position, Quaternion.identity);
             instance.GetComponent<BombBehavior>().Setup(m_CurrentRow, m_CurrentCol);
+        }
+
+        // Ceci est pour le piège
+        if (LevelGenerator.Instance.GetTileTypeAtIndex(m_CurrentRow, m_CurrentCol) == ETileType.Trap)
+        {
+            LevelGenerator.Instance.SetTileTypeAtIndex(m_CurrentRow, m_CurrentCol);
+            DamagePlayer();
+        }
+    }
+
+    public void DamagePlayer()
+    {
+        m_CurrentHp--;
+        UIManager.Instance.AjustHealth();
+        if(m_CurrentHp <= 0 )
+        {
+            SceneManagement.Instance.ChangeLevel("Death");
         }
     }
 

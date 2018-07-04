@@ -11,11 +11,10 @@ public class LevelDataEditor : Editor
     private Texture m_WallTexture;
     private Texture m_FloorTexture;
     private Texture m_BrickDestructibleTexture;
-
+    private Texture m_TrapTexture;
     private LevelData m_Target;
     private Rect m_Rect;
     private Rect m_TileRect;
-
     private int m_Width;
     private int m_Height;
 
@@ -28,6 +27,7 @@ public class LevelDataEditor : Editor
         m_WallTexture = (Texture)EditorGUIUtility.Load("Bricks.jpg");
         m_FloorTexture = (Texture)EditorGUIUtility.Load("Floor.jpg");
         m_BrickDestructibleTexture = (Texture)EditorGUIUtility.Load("BrickNew.jpg");
+        m_TrapTexture = (Texture)EditorGUIUtility.Load("trap.jpg");
 
         InitSize();
     }
@@ -136,6 +136,11 @@ public class LevelDataEditor : Editor
             case ETileType.Destructable:
                 {
                     image = m_BrickDestructibleTexture;
+                    break;
+                }
+            case ETileType.Trap:
+                {
+                    image = m_TrapTexture;
                     break;
                 }
             default:

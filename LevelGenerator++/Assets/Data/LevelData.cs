@@ -10,7 +10,6 @@ public class LevelData : ScriptableObject
     {
         get
         {
-
             return m_Tiles;
         }
         set { m_Tiles = value; }
@@ -43,7 +42,6 @@ public class TileColumn
     [SerializeField] private ETileType[] m_Tiles;
     private ETileType[] m_TilesCopy;
 
-
     public TileColumn(int aLength)
     {
         m_Tiles = new ETileType[aLength];
@@ -57,7 +55,6 @@ public class TileColumn
     }
 
     public int Length { get { return m_Tiles == null ? 0 : m_Tiles.Length; } }
-
 
     public void SetCopy()
     {

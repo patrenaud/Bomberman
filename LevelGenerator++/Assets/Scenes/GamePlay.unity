@@ -151,12 +151,16 @@ MonoBehaviour:
   - {fileID: 1504962825008440, guid: 7c00f8571f5fe004c9dd150a44cf4b5e, type: 2}
   - {fileID: 1951917527722672, guid: 358bb1d3f94368e4aa49420c48ab4b09, type: 2}
   - {fileID: 1160025125422204, guid: 227e3b8e69445cb46b25c5b1103ca67d, type: 2}
+  m_TrapPrefab: {fileID: 1863271837721384, guid: 1bb1f403088c4c642a6193d17d62a025,
+    type: 2}
   m_LevelData: {fileID: 11400000, guid: 08f71569b5a63604cb5374835e858a5e, type: 2}
-  m_PlayerPrefab: {fileID: 114525500790369338, guid: da560d8f549085444b81e4b6ca702bb5,
+  m_PlayerPrefab: {fileID: 114467005617124424, guid: da560d8f549085444b81e4b6ca702bb5,
     type: 2}
   m_EnemyPrefab: {fileID: 114390800421826114, guid: 857312ad9c8693643b550ddfeb7e3d98,
     type: 2}
-  m_Powerup1: {fileID: 114720258058931652, guid: 43cdf48da4b34da4bb58cf6a8991d6ff,
+  m_BombPowerup1: {fileID: 114720258058931652, guid: 43cdf48da4b34da4bb58cf6a8991d6ff,
+    type: 2}
+  m_SpeedPowerUp: {fileID: 114972426411229054, guid: c64a369f055bf7b4d8c08ec8d266bc9b,
     type: 2}
 --- !u!4 &459005897
 Transform:
@@ -182,6 +186,7 @@ GameObject:
   - component: {fileID: 635087383}
   - component: {fileID: 635087382}
   - component: {fileID: 635087381}
+  - component: {fileID: 635087385}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -265,6 +270,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &635087385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 635087380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7cbe48f93381f40aab56b32ecee037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &974819747
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,9 +431,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114769015355798208, guid: abe07462e860b8044b01331b2c5fd1ff,
-          type: 2}
-        m_MethodName: LoadMainMenu
+      - m_Target: {fileID: 635087385}
+        m_MethodName: SwitchToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    public int m_CurrentRow;
+    public int m_CurrentCol;
 
-    private int m_CurrentRow;
-    private int m_CurrentCol;
     private bool m_IsMoving = false;
     private Vector2 m_InitialPos;
     private Vector2 m_WantedPos;
@@ -25,6 +25,7 @@ public class EnemyMovement : MonoBehaviour
     {
         m_CurrentRow = aRow;
         m_CurrentCol = aCol;
+        LevelGenerator.Instance.m_EnemyPrefab = this;
     }
 
     // Update is called once per frame
@@ -43,14 +44,7 @@ public class EnemyMovement : MonoBehaviour
 
                 m_InitialPos = transform.position;
                 m_WantedPos = LevelGenerator.Instance.GetPositionAt(m_CurrentRow, m_CurrentCol + (int)askMoveHorizontal);
-                if ((int)askMoveHorizontal < 0)
-                {
-                    GetComponent<SpriteRenderer>().flipX = false;
-                }
-                else
-                {
-                    GetComponent<SpriteRenderer>().flipX = true;
-                }
+
 
                 m_CurrentCol += (int)askMoveHorizontal;
             }
@@ -64,12 +58,16 @@ public class EnemyMovement : MonoBehaviour
                 m_WantedPos = LevelGenerator.Instance.GetPositionAt(m_CurrentRow - (int)askMoveVertical, m_CurrentCol);
                 m_CurrentRow -= (int)askMoveVertical;
             }
-            if (Input.GetKeyDown(KeyCode.D))
+            if ((int)askMoveHorizontal < 0)
             {
-                Debug.Log(m_CurrentCol);
-                Debug.Log(m_CurrentRow);
+                GetComponent<SpriteRenderer>().flipX = false;
+            }
+            else if ((int)askMoveHorizontal > 0)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
             }
         }
+
 
         // Ceci contrôle les animations du Player
         m_InputX = Input.GetAxisRaw("Horizontal");
@@ -77,10 +75,19 @@ public class EnemyMovement : MonoBehaviour
         m_Animator.SetInteger("MoveHorizontal", (int)m_InputX);
         m_Animator.SetInteger("MoveVertical", (int)m_InputY);
 
-        // Ceci, normalement, détruit l'ennemi lorsqu'il est sur la même case que la Player
+
         if (m_CurrentRow == LevelGenerator.Instance.m_PlayerPrefab.m_CurrentRow && m_CurrentCol == LevelGenerator.Instance.m_PlayerPrefab.m_CurrentCol)
         {
+            LevelGenerator.Instance.m_PlayerPrefab.DamagePlayer();
             Destroy(gameObject);
+            if (LevelGenerator.Instance.m_PlayerPrefab.m_CurrentHp > 0)
+            {
+                SceneManagement.Instance.ChangeLevel("Results");
+            }
+            else
+            {
+                SceneManagement.Instance.ChangeLevel("Death");
+            }
         }
 
     }
